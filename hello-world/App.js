@@ -3,32 +3,27 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, Button, Alert, TextInput, Image, FlatList } from 'react-native';
 import { NavigationContainer} from '@react-navigation/native';
 import { createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import { Ionicons} from '@expo/vector-icons';  
+import HomeScreen from './HomeScreen';
+import SettingScreen from './SettingScreen'
+import { createStackNavigator} from'@react-navigation/stack';
+
 
 export default function App() {
-  const[text, setText] = useState('');
-  const[data, setData] = useState([]);
-  const Tab = createBottomTabNavigator();
-
-  const buttonPressed = () => {
-    setData([...data, {key:text }]);
-    setText('' );
-    console.log(data);
-  }
+  const Stack = createStackNavigator();
 
   return (
-    <View style={styles.container}>
-      <StatusBar style="auto" />
-      <Text>Hello World!</Text>
-      <Button onPress={buttonPressed} title="Press me" />
-      <TextInput style={{width:200, borderColor:'gray', borderWidth:1}} onChangeText={text=> setText(text)} value={text} />
-      <Image style={{  width:250, height:100 }} source={require('./img/logo.png')}  />
-      <Text style={styles.alerttext}>Red text</Text>
-      <FlatList data={data} renderItem={({item}) =><Text>{item.key}</Text>}/>
-      
-      
-    </View>
-  );
-}
+  <NavigationContainer>
+    <Stack.Navigator screenOptions={({ route }) => ({ tabBarIcon: ({ focused, color, size }) => {
+       let iconName;
+       if (route.name === 'Home') {iconName= 'md-home';} 
+       else if (route.name === 'Settings') {iconName= 'md-settings';}
+       return <Ionicons name={iconName} size={size} color={color} />; 
+       },})}>
+      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="Settings" component={SettingScreen} />
+    </Stack.Navigator>
+    </NavigationContainer>);}
 
 
 const styles = StyleSheet.create({
